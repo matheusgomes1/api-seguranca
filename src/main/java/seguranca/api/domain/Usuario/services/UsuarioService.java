@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import seguranca.api.domain.Usuario.Usuario;
@@ -18,6 +20,8 @@ import seguranca.api.domain.Usuario.interfaces.IUsuarioService;
 import seguranca.api.domain.Usuario.dtos.LoginDto;
 import seguranca.api.domain.Usuario.interfaces.IValidacaoUsuario;
 import seguranca.api.infra.repository.IUsuarioRepository;
+import seguranca.api.infra.security.DadosTokenJWT;
+import seguranca.api.infra.security.TokenService;
 import seguranca.api.infra.validation.interfaces.INotificadorService;
 
 import java.util.List;
@@ -31,11 +35,15 @@ public class UsuarioService implements IUsuarioService {
     @Autowired
     IUsuarioRepository repository;
     @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
     @Autowired
     List<IValidacaoUsuario> validacoesCadastroUsuario;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private AuthenticationManager manager;
+    @Autowired
+    private TokenService tokenService;
 
     private CadastroUsuarioDto _cadastroUsuarioDto;
 
@@ -54,24 +62,29 @@ public class UsuarioService implements IUsuarioService {
         }
     }
 
-    public boolean login(LoginDto loginDto) {
+    public DadosTokenJWT login(LoginDto loginDto) {
         var usuario = repository.findBylogin(loginDto.login());
 
         if (usuario == null) {
             notificador.addNotificacao("Erro de domínio", "Cadastro não encontrado");
-            return false;
+            return null;
         }
 
         if (!usuario.isAtivo()) {
             notificador.addNotificacao("Erro de domínio", "Usuário inativo");
-            return false;
+            return null;
         }
 
-        if (passwordEncoder.matches(loginDto.senha(), usuario.getSenha())) {
+        /*if (passwordEncoder.matches(loginDto.senha(), usuario.getSenha())) {
             return true;
-        }
 
-        return false;
+        }*/
+
+        var authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.login(), loginDto.senha());
+        var authentication = manager.authenticate(authenticationToken);
+        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+
+        return new DadosTokenJWT(tokenJWT);
     }
 
     public Page<ListagemUsuarioDto> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {

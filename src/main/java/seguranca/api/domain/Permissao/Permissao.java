@@ -18,6 +18,7 @@ public class Permissao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer permissaoId;
+    String identificador;
     @Enumerated(EnumType.STRING)
     TipoPermissaoEnum tipoPermissao;
     String endpoint;

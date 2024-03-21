@@ -7,10 +7,11 @@ import seguranca.api.domain.Usuario.dtos.CadastroUsuarioDto;
 import seguranca.api.domain.Usuario.dtos.ListagemUsuarioDto;
 import seguranca.api.domain.Usuario.dtos.LoginDto;
 import seguranca.api.domain.Usuario.Usuario;
+import seguranca.api.infra.security.DadosTokenJWT;
 
 public interface IUsuarioService {
     Usuario cadastrarUsuario(CadastroUsuarioDto cadastroUsuarioDto);
-    boolean login(LoginDto loginDto);
+    DadosTokenJWT login(LoginDto loginDto);
 
     Page<ListagemUsuarioDto> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao);
 }
