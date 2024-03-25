@@ -1,10 +1,12 @@
 package seguranca.api.infra.validation.interfaces;
 
-import org.springframework.http.ResponseEntity;
+import seguranca.api.infra.validation.NotificacaoDominio;
+
+import java.util.List;
 
 public interface INotificadorService {
     boolean semNotificacaoDominio();
     boolean temNotificacaoDominio();
     void addNotificacao(String nome, String mensagem);
-    <T extends Object> ResponseEntity retornoApi(T dados);
+    List<NotificacaoDominio> getNotificacoesDominio();
 }

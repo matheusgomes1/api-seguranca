@@ -1,6 +1,8 @@
 package seguranca.api.infra.security;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,8 +30,8 @@ public class SecurityFilter extends OncePerRequestFilter {
         var tokenJWT = recuperarToken(request);
 
         if (tokenJWT != null) {
-            var subject = tokenService.getSubject(tokenJWT);
-            var usuario = repository.findBylogin(subject);
+            var login = tokenService.getSubject(tokenJWT);
+            var usuario = repository.findBylogin(login);
 
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

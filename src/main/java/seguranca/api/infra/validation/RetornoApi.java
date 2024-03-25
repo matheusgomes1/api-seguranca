@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RetornoApi<T> {
-    int statusHttp;
-    List<String> erros;
-    T dados;
+    public int statusHttp;
+    public List<String> erros;
+    public T dados;
 }

@@ -75,11 +75,6 @@ public class UsuarioService implements IUsuarioService {
             return null;
         }
 
-        /*if (passwordEncoder.matches(loginDto.senha(), usuario.getSenha())) {
-            return true;
-
-        }*/
-
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.login(), loginDto.senha());
         var authentication = manager.authenticate(authenticationToken);
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
