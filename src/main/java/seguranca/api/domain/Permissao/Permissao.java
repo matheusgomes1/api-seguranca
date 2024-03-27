@@ -4,14 +4,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import seguranca.api.domain.Perfil.Perfil;
-import seguranca.api.domain.Permissao.enums.TipoPermissaoEnum;
+import seguranca.api.domain.Permissao.enums.ETipoPermissao;
 
 import java.util.Set;
 
 @Table(name = "permissao")
 @Entity(name = "Permissao")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Permissao {
@@ -20,9 +22,8 @@ public class Permissao {
     Integer permissaoId;
     String identificador;
     @Enumerated(EnumType.STRING)
-    TipoPermissaoEnum tipoPermissao;
+    ETipoPermissao tipoPermissao;
     String endpoint;
-    String expressaoRegular;
     String nomeComponente;
 
     @ManyToMany

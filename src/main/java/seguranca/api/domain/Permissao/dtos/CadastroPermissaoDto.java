@@ -1,6 +1,6 @@
 package seguranca.api.domain.Permissao.dtos;
 
-import seguranca.api.domain.Permissao.enums.TipoPermissaoEnum;
+import seguranca.api.domain.Permissao.enums.ETipoPermissao;
 
-public record CadastroPermissaoDto(String identificador, TipoPermissaoEnum tipoPermissao, String endpoint, String expressaoRegular, String nomeComponente, String nomePerfil) {
+public record CadastroPermissaoDto(String identificador, ETipoPermissao tipoPermissao, String endpoint, String nomeComponente, String nomePerfil) {
 }
